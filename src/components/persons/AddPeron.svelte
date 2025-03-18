@@ -92,6 +92,9 @@
             dateOfBirth.set(null);
 
             showToast("Person Added Successfully", "success");
+
+            selectedReligionId.set("");
+            selectedCasteId.set("");
         } catch (error) {
             console.log(error);
 

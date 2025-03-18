@@ -1,6 +1,4 @@
 <script lang="ts">
-    import ReligionSelector from "./ReligionSelector.svelte";
-    import CasteSelector from "./CasteSelector.svelte";
     import {
         errorMessage,
         religions,
@@ -50,10 +48,6 @@
 
 <section class="container mx-auto">
     <div class="mx-auto">
-        {#if currentErrorMessage}
-            <div class="text-red-500">{currentErrorMessage}</div>
-        {/if}
-
         <div class="grid grid-cols-2 bg-[#14646f] p-10 rounded-md">
             <div class="flex flex-col">
                 <label for="religion">Select a Religion</label>
