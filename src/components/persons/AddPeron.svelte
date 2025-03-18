@@ -2,7 +2,7 @@
     import { onMount } from "svelte";
     import { showToast } from "../../service/toastService";
     import { writable } from "svelte/store";
-    import { createPerson, createReligion } from "../../utils/createOperation";
+    import { createPerson } from "../../utils/createOperation";
     import Calender from "../Calender.svelte";
     import ReligionAndCaste from "../religion and caste/ReligionAndCaste.svelte";
     import {
@@ -18,17 +18,17 @@
         email: string;
         company: string;
         job: string;
-        dateOfBirth: string | null; // Allow null
-        religion: string | null; // Allow null
-        caste: string | null; // Allow null
+        dateOfBirth: string | null;
+        religion: string | null;
+        caste: string | null;
     } = {
         name: "",
         email: "",
         company: "",
         job: "",
-        dateOfBirth: null, // Initialize as null
-        religion: null, // Initialize as null
-        caste: null, // Initialize as null
+        dateOfBirth: null,
+        religion: null,
+        caste: null,
     };
     const isLoading = writable(false);
 
@@ -111,7 +111,6 @@
     <div class="container mx-auto p-4">
         <h1 class="font-bold text-lg md:text-4xl mt-10">Person Manager</h1>
 
-        {$dateOfBirth}
         <form class="mt-10 mx-auto" on:submit|preventDefault={addPerosn}>
             <div class="grid grid-cols-1 w-[50%] gap-10">
                 <div class="flex flex-col">

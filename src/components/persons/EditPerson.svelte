@@ -2,10 +2,10 @@
     import { onMount } from "svelte";
     import { showToast } from "../../service/toastService";
     import { writable } from "svelte/store";
-    import { createPerson, createReligion } from "../../utils/createOperation";
     import Calender from "../Calender.svelte";
-    import ReligionAndCaste from "../religion and caste/ReligionAndCaste.svelte";
     import {
+        editCasteId,
+        editReligionId,
         selectedCasteId,
         selectedReligionId,
     } from "../../stores/religions";
@@ -15,6 +15,7 @@
     import { page } from "$app/stores";
     import { updatePerson } from "../../utils/updateOperation";
     import { goto } from "$app/navigation";
+    import ReligionCaste from "./ReligionCaste.svelte";
     export let id: string;
 
     $: id = $page.params.id;
@@ -25,9 +26,9 @@
         email: string;
         company: string;
         job: string;
-        dateOfBirth: string | null; // Allow null
-        religion: string | null; // Allow null
-        caste: string | null; // Allow null
+        dateOfBirth: string | null;
+        religion: string | null;
+        caste: string | null;
     } = {
         name: "",
         email: "",
@@ -53,11 +54,15 @@
 
     onMount(async () => {
         try {
+            editReligionId.set(null);
+            editCasteId.set(null);
             const data: Persons[] = await fetchSinglePerson(id);
             console.log("Fetched single user data:", data);
 
             if (data) {
                 singleUser = data;
+                editReligionId.set(singleUser.religion ?? null);
+                editCasteId.set(singleUser.caste ?? null);
             } else {
                 console.log("No user found or data is empty");
             }
@@ -68,6 +73,7 @@
 
     $: if (singleUser) {
         birthDate = singleUser.dateOfBirth || null;
+
         newPerson = {
             name: singleUser.name,
             email: singleUser.email || "",
@@ -84,9 +90,9 @@
         try {
             newPerson.dateOfBirth = $dateOfBirth;
 
-            newPerson.religion = $selectedReligionId;
+            newPerson.religion = $editReligionId;
 
-            newPerson.caste = $selectedCasteId;
+            newPerson.caste = $editCasteId;
             if (!newPerson.dateOfBirth) {
                 showToast("Date of birth is required", "error");
                 return;
@@ -114,6 +120,8 @@
                 caste: "",
             };
             dateOfBirth.set(null);
+            editReligionId.set(null);
+            editCasteId.set(null);
 
             showToast("Person Updated Successfully", "success");
             goto("/persons");
@@ -180,7 +188,7 @@
                 </div>
 
                 <Calender {birthDate} />
-                <ReligionAndCaste />
+                <ReligionCaste />
 
                 <div class="flex flex-col">
                     <div class="flex gap-5">

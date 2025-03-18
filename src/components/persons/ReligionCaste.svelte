@@ -1,15 +1,14 @@
 <script lang="ts">
-    import ReligionSelector from "./ReligionSelector.svelte";
-    import CasteSelector from "./CasteSelector.svelte";
     import {
+        editCasteId,
+        editReligionId,
         errorMessage,
         religions,
-        selectedCasteId,
-        selectedReligionId,
         singleReligion,
     } from "../../stores/religions";
     import { onDestroy, onMount } from "svelte";
-    import { loadCastes, loadReligions } from "./religionAndCasteFetch";
+
+    import { editCastes, editReligions } from "./personReligionAndCaste";
     let currentErrorMessage: string | null = null;
 
     const unsubscribe = errorMessage.subscribe((value) => {
@@ -20,45 +19,22 @@
         unsubscribe();
     });
 
-    let selectedReligionName: string | null = null;
-    let selectedCasteName: string | null = null;
-
-    $: {
-        const selectedReligion = $religions.find(
-            (r) => r._id === $selectedReligionId,
-        );
-
-        selectedReligionName = selectedReligion ? selectedReligion.name : null;
-    }
-
-    $: {
-        const selectedCaste = $singleReligion.find(
-            (c) => c._id === $selectedCasteId,
-        );
-
-        selectedCasteName = selectedCaste ? selectedCaste.name : null;
-    }
-
     onMount(() => {
-        loadReligions();
+        editReligions();
     });
 
-    $: if ($selectedReligionId) {
-        loadCastes($selectedReligionId);
+    $: if ($editReligionId) {
+        editCastes($editReligionId);
     }
 </script>
 
 <section class="container mx-auto">
     <div class="mx-auto">
-        {#if currentErrorMessage}
-            <div class="text-red-500">{currentErrorMessage}</div>
-        {/if}
-
         <div class="grid grid-cols-2 bg-[#14646f] p-10 rounded-md">
             <div class="flex flex-col">
                 <label for="religion">Select a Religion</label>
                 <select
-                    bind:value={$selectedReligionId}
+                    bind:value={$editReligionId}
                     class="rounded-md p-2 w-[50%] mt-5"
                 >
                     {#each $religions as religion}
@@ -69,7 +45,7 @@
             <div class="flex flex-col">
                 <label for="caste">Select a Caste</label>
                 <select
-                    bind:value={$selectedCasteId}
+                    bind:value={$editCasteId}
                     disabled={!$singleReligion.length}
                     class="rounded-md p-2 w-[50%] mt-5"
                 >

@@ -1,85 +1,56 @@
-
-import { errorMessage, religions, selectedCasteId, selectedReligionId, singleReligion } from "../../stores/religions";
+import { editCasteId, editReligionId, errorMessage, religions, selectedCasteId, selectedReligionId, singleReligion } from "../../stores/religions";
 import type { Caste, Religion } from "../../types/religion";
 import { fetchCastesByReligion, fetchReligions } from "../../utils/fetchData";
-const cachedReligions: Religion[] = [];
 
+const cachedReligions: Religion[] = [];
 const cachedCastes: Record<string, Caste[]> = {};
 
-export const loadReligions = async () => {
 
-    if (cachedReligions.length > 0) {
+let DEFAULT_RELIGION_ID: string | null = null;
+let DEFAULT_CASTE_ID: string | null = null;
 
-        religions.set(cachedReligions);
+editReligionId.subscribe(value => {
+    DEFAULT_RELIGION_ID = value;
+});
 
-        return;
-
-    }
+editCasteId.subscribe(value => {
+    DEFAULT_CASTE_ID = value;
+});
+export const editReligions = async () => {
 
 
     try {
-
         const data = await fetchReligions();
-
         cachedReligions.push(...data);
-
         religions.set(data);
 
         if (data.length > 0) {
-
-            selectedReligionId.set(data[0]._id);
-
+            const defaultReligion = data.find(r => r._id === DEFAULT_RELIGION_ID);
+            editReligionId.set(defaultReligion._id);
         }
-
     } catch (error) {
-
         errorMessage.set("Failed to fetch religions. Please try again later.");
-
     }
-
 };
 
-export const loadCastes = async (religionId: string) => {
+export const editCastes = async (religionId: string) => {
 
-    if (cachedCastes[religionId]) {
-
-        singleReligion.set(cachedCastes[religionId]);
-
-        return;
-
-    }
 
     try {
-
         const castesData = await fetchCastesByReligion(religionId);
-
         cachedCastes[religionId] = castesData;
-
         singleReligion.set(castesData);
 
         if (castesData.length > 0) {
-
-            selectedCasteId.set(castesData[0]._id);
-
-        } else {
-
-            selectedCasteId.set(null);
-
+            const defaultCaste = castesData.find(c => c._id === DEFAULT_CASTE_ID);
+            editCasteId.set(defaultCaste._id);
         }
-
     } catch (error) {
-
         errorMessage.set("Failed to fetch castes. Please try again later.");
-
     }
-
 };
 
-
 export const addReligionToCache = (newReligion: Religion) => {
-
     cachedReligions.push(newReligion);
-
     religions.set(cachedReligions);
-
 };

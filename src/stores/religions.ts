@@ -6,3 +6,8 @@ export const singleReligion = writable<Caste[]>([]);
 export const selectedReligionId = writable<string | null>(null);
 export const selectedCasteId = writable<string | null>(null);
 export const errorMessage = writable<string | null>(null);
+
+
+export const editReligionId = writable<string | null>(null);
+export const editCasteId = writable<string | null>(null);
+export const editSingleReligion = writable<Caste[]>([]);
