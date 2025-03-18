@@ -93,20 +93,7 @@
             newPerson.religion = $editReligionId;
 
             newPerson.caste = $editCasteId;
-            if (!newPerson.dateOfBirth) {
-                showToast("Date of birth is required", "error");
-                return;
-            }
 
-            if (!$selectedReligionId) {
-                showToast("Religion is required", "error");
-                return;
-            }
-
-            if (!$selectedCasteId) {
-                showToast("Caste is required", "error");
-                return;
-            }
             const addedPerson = await updatePerson(id, newPerson);
             await fetchPerosnsAgain();
 
